@@ -1,0 +1,128 @@
+{
+  "name": "Survey Queue Status",
+  "namespace": "ORCA\\SurveyQueueStatus",
+  "description": "Survey Queue Status",
+
+  "framework-version": 5,
+  "authors": [
+    {
+      "name": "Chris Kadolph",
+      "email": "kadolph.christopher@marshfieldresearch.org",
+      "institution": "Marshfield Clinic Research Institute"
+    },
+    {
+      "name": "Krishna Upadhyay",
+      "email": "upadhyay.krishna@marshfieldclinic.org",
+      "institution": "Marshfield Clinic Research Institute"
+    },
+    {
+      "name": "Steven Koran",
+      "email": "koran.steve@marshfieldclinic.org",
+      "institution": "Marshfield Clinic Research Institute"
+    }
+  ],
+  "crons": [
+    {
+      "cron_name": "survey_queue_status",
+      "cron_description": "Update survey queue data for each record",
+      "method": "cronEntryPoint",
+      "cron_hour": 7,
+      "cron_minute": 0
+    }
+  ],
+  "links": {
+    "project": [
+      {
+        "name": "Survey Queue Status",
+        "icon": "blog_pencil",
+        "url": "index.php"
+      }
+    ]
+  },
+  "project-settings": [
+    {
+      "key": "sq_cron_enabled",
+      "name": "Enable Cron",
+      "required": true,
+      "type": "dropdown",
+      "choices": [
+        {
+          "value": "enabled",
+          "name": "Enabled"
+        },
+        {
+          "value": "disabled",
+          "name": "Disabled"
+        }
+      ]
+    },
+    {
+      "key": "survey_email_enabled",
+      "name": "Survey Email",
+      "required": true,
+      "type": "dropdown",
+      "branchingLogic": {
+        "field": "sq_cron_enabled",
+        "value": "enabled"
+      },
+      "choices": [
+        {
+          "value": "enabled",
+          "name": "Enabled"
+        },
+        {
+          "value": "disabled",
+          "name": "Disabled"
+        }
+      ]
+    },
+    {
+      "key": "survey_email_body",
+      "name": "Email body",
+      "type": "rich-text",
+      "repeatable": false,
+      "branchingLogic": {
+        "field": "survey_email_enabled",
+        "value": "enabled"
+      }
+    },
+    {
+      "key": "reminder_email_frequency",
+      "name": "Reminder Emails Frequency (Days)",
+      "required": true,
+      "type": "textbox",
+      "branchingLogic": {
+        "field": "survey_email_enabled",
+        "value": "enabled"
+      }
+
+    },
+    {
+      "key": "email-start-date",
+      "name": "Email Initialization Date",
+      "type": "date",
+      "required": true,
+      "repeatable": false,
+      "branchingLogic": {
+        "field": "survey_email_enabled",
+        "value": "enabled"
+      }
+    },
+    {
+      "key": "email-end-date",
+      "name": "Email End Date",
+      "type": "date",
+      "repeatable": false,
+      "branchingLogic": {
+        "field": "survey_email_enabled",
+        "value": "enabled"
+      }
+    }
+  ],
+  "compatibility": {
+    "php-version-min": "7.0",
+    "php-version-max": "",
+    "redcap-version-min": "9.10.0",
+    "redcap-version-max": ""
+  }
+}
