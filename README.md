@@ -31,11 +31,11 @@ After adding those fields to the project, you may enable and configure the Surve
 
 1. To activate the module, you must enable the cron job in the module configuration settings as shown below.  Once enabled, the module will evaluate the survey queue and update the values in the survey data fields upon the next scheduled run of the cron job.
 
-   ![settings_cron_enabled](documentation/images/settings_cron_enabled.PNG)
+   ![settings_cron_enabled](documentation/images/settings_cron_enabled.png)
 
 1. Enable the **Survey Email** function if you will be using the built-in reminder email function.  You must specify a value for this field. (The default value is “Disabled.”)  Keep this function disabled if, for example, you wish to configure reminder emails via the REDCap Alerts & Notifications feature or if you do not want to send reminder email messages at all.
 
-   ![settings_survey_email_enabled](documentation/images/settings_survey_email_enabled.PNG)
+   ![settings_survey_email_enabled](documentation/images/settings_survey_email_enabled.png)
    
 1. If you enable the **Survey Email** function, you must also enter an **Email body**; i.e., the text of the reminder email message you wish to send to survey respondents. You may use the rich text editor features as desired.  Also, piping is allowed in the **Email body** field; for example:
    - `[participant_firstname]`, below is your survey queue, which lists the `[incomplete_surveys_number]` surveys that you have not yet completed. Please click on the link below to open your survey queue; select a survey and click the **Begin Survey** button.
@@ -62,8 +62,8 @@ If you prefer to send notifications to survey respondents using the REDCap Alert
 
 Then you may write an alert with conditional logic based on the values entered into the `[incomplete_surveys]`, `[incomplete_surveys_number]`, `[total_surveys_number]`, `[survey_queue_link]` fields, in combination with other project fields.  The following page shows an example of an alert that uses a Survey Queue Status field in its logic.
 
-![alert configuration_1](documentation/images/alert_1.PNG)
+![alert configuration_1](documentation/images/alert_1.png)
 
-![alert configuration_2](documentation/images/alert_2.PNG)
+![alert configuration_2](documentation/images/alert_2.png)
 
-![alert configuration_3](documentation/images/alert_3.PNG)
+![alert configuration_3](documentation/images/alert_3.png)
