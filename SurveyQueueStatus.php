@@ -6,7 +6,6 @@ namespace ORCA\SurveyQueueStatus;
 use ExternalModules\AbstractExternalModule;
 use ExternalModules\ExternalModules;
 
-require_once 'vendor/autoload.php';
 require_once 'traits/REDCapUtils.php';
 require_once 'traits/ModuleUtils.php';
 /**
@@ -17,7 +16,6 @@ class SurveyQueueStatus extends AbstractExternalModule {
     use \ORCA\SurveyQueueStatus\REDCapUtils;
     use \ORCA\SurveyQueueStatus\ModuleUtils;
 
-    private static $smarty;
     public $_module_path = null;
 
     public function __construct()
@@ -42,20 +40,5 @@ class SurveyQueueStatus extends AbstractExternalModule {
         }
         \REDCap::logEvent($this->PREFIX, "Cron Job Execution Completed", "", null, null, $Proj->project_id);
 
-    }
-    public function initializeSmarty() {
-        self::$smarty = new \Smarty();
-        self::$smarty->setTemplateDir($this->_module_path . 'templates');
-        self::$smarty->setCompileDir($this->_module_path . 'templates_c');
-        self::$smarty->setConfigDir($this->_module_path . 'configs');
-        self::$smarty->setCacheDir($this->_module_path . 'cache');
-    }
-
-    public function setTemplateVariable($key, $value) {
-        self::$smarty->assign($key, $value);
-    }
-
-    public function displayTemplate($template) {
-        self::$smarty->display($template);
     }
 }

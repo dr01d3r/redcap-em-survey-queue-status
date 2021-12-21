@@ -3,7 +3,7 @@
 namespace ORCA\SurveyQueueStatus;
 
 trait ModuleUtils {
-    function updateSurveyQueueStatus($debugging = false) {
+    function updateSurveyQueueStatus() {
         global $Proj;
         $this->addTime();
         // getting project data
