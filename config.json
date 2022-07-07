@@ -3,7 +3,7 @@
   "namespace": "ORCA\\SurveyQueueStatus",
   "description": "Survey Queue Status",
 
-  "framework-version": 6,
+  "framework-version": 8,
   "authors": [
     {
       "name": "Chris Kadolph",
@@ -26,22 +26,23 @@
       "cron_name": "survey_queue_status",
       "cron_description": "Update survey queue data for each record",
       "method": "cronEntryPoint",
-      "cron_hour": 7,
-      "cron_minute": 0
+      "cron_frequency": "3600",
+      "cron_max_run_time": "86400"
     }
   ],
   "links": {
     "project": [
       {
         "name": "Survey Queue Status",
-        "icon": "blog_pencil",
-        "url": "index.php"
+        "icon": "fas fa-poll",
+        "url": "index.php",
+        "show-header-and-footer": true
       }
     ]
   },
   "project-settings": [
     {
-      "key": "sq_cron_enabled",
+      "key": "cron-enabled",
       "name": "Enable Cron",
       "required": true,
       "type": "dropdown",
@@ -57,12 +58,18 @@
       ]
     },
     {
+      "key": "debugging_enabled",
+      "name": "Enable Debug Mode",
+      "required": false,
+      "type": "checkbox"
+    },
+    {
       "key": "survey_email_enabled",
       "name": "Survey Email",
       "required": true,
       "type": "dropdown",
       "branchingLogic": {
-        "field": "sq_cron_enabled",
+        "field": "cron-enabled",
         "value": "enabled"
       },
       "choices": [
@@ -77,10 +84,30 @@
       ]
     },
     {
+      "key": "survey_email_from",
+      "name": "Email From",
+      "type": "email",
+      "required": true,
+      "branchingLogic": {
+        "field": "survey_email_enabled",
+        "value": "enabled"
+      }
+    },
+    {
+      "key": "survey_email_subj",
+      "name": "Email Subject",
+      "type": "text",
+      "required": true,
+      "branchingLogic": {
+        "field": "survey_email_enabled",
+        "value": "enabled"
+      }
+    },
+    {
       "key": "survey_email_body",
-      "name": "Email body",
+      "name": "Email Body",
       "type": "rich-text",
-      "repeatable": false,
+      "required": true,
       "branchingLogic": {
         "field": "survey_email_enabled",
         "value": "enabled"
@@ -90,7 +117,7 @@
       "key": "reminder_email_frequency",
       "name": "Reminder Emails Frequency (Days)",
       "required": true,
-      "type": "textbox",
+      "type": "text",
       "branchingLogic": {
         "field": "survey_email_enabled",
         "value": "enabled"
@@ -102,7 +129,6 @@
       "name": "Email Initialization Date",
       "type": "date",
       "required": true,
-      "repeatable": false,
       "branchingLogic": {
         "field": "survey_email_enabled",
         "value": "enabled"
@@ -112,7 +138,6 @@
       "key": "email-end-date",
       "name": "Email End Date",
       "type": "date",
-      "repeatable": false,
       "branchingLogic": {
         "field": "survey_email_enabled",
         "value": "enabled"
@@ -120,9 +145,6 @@
     }
   ],
   "compatibility": {
-    "php-version-min": "7.0",
-    "php-version-max": "",
-    "redcap-version-min": "10.4.1",
-    "redcap-version-max": ""
+    "redcap-version-min": "12.4.3"
   }
 }

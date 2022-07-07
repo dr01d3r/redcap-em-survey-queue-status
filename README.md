@@ -1,31 +1,60 @@
 ### REDCap External Module:  Survey Queue Status
 
-*Last Modified: 12/17/2021*
+*Last Modified: 2022-06-30*
 
-At a configurable interval, the Survey Queue Status module will evaluate the project's survey queue against all records in the project.  Module output will consist of the following:
+The Survey Queue Status module will evaluate the project's survey queue against all records in the project.  Module output will consist of the following for each project record:
 
-1. For each project record, a value (**Yes** or **No**) that indicates whether or not incomplete surveys currently exist in the survey queue. 
-1. For each project record, a count of the incomplete surveys currently in the survey queue.
-1. For each project record, a count of the total surveys currently in the survey queue.
+1. A value (**Yes** or **No**) that indicates whether or not incomplete surveys currently exist in the survey queue. 
+1. A count of the incomplete surveys currently in the survey queue.
+1. A count of the total surveys currently in the survey queue.
 1. Each record's survey queue link.
+1. A timestamp noting the last time the record was processed.
 
-In addition, an optional component allows admins to configure the sending of automatic reminder email messages. 
+Additional info/features:
+
+- The module utilizes a cron job that runs hourly.
+   - A 24 hour max run time is allocated, in case the cron takes longer than an hour to run.
+- Individual records are processed only once every 24 hours.
+   - This can be overridden when run on-demand.
+- Records are processed in batches of 100, so in the event of a module crash, it will pick up where it left off during the next run. 
+- An optional component allows admins to configure the sending of automatic reminder email messages.
+   - Supports rich text and piping.  
 
 ---
 
 ## Setup
 
-The Survey Queue Status Module uses a REDCap cron job to check the survey queue and write values to the fields listed below.  When enabled, the cron job will run each day at a time defined in the module's config file.
+#### Debugging Mode
 
-- The default time setting is **7:00 AM**
+A quick note about debugging before you get started.  The `Debug Mode` option in the module config is **not** considered during automation.  It only matters when running the job manually from the project link.
 
-The Survey Queue Status Module requires admins to create the following four fields in an appropriate project instrument:
+#### Required Fields
 
-- `[incomplete_surveys]` - Text Box; the Survey Queue Status Module will write **Yes** to this field if incomplete surveys exist in the queue for the record and **No** if there are no incomplete surveys for the record.
-- `[incomplete_surveys_number]` - Text Box; the module writes the number of incomplete surveys in the queue for the record.
-- `[total_surveys_number]` - Text Box; the module writes the number of total surveys in the queue for the record.
-- `[survey_queue_link]` - Text Box; the module writes the record's survey queue link encoded as HTML, in this format:
+The module requires admins to create the following five (5) fields in an appropriate project instrument:
+
+> **IMPORTANT:** If the module is longitudinal, these fields **must** exist on the first event! 
+
+- `[last_processed_datetime]`
+   - Field Type: `text`
+   - Validation: `Datetime w/ seconds (M-D-Y H:M:S)`
+   - A Date/Time field used to track when a record was last processed.
+- `[incomplete_surveys]`
+   - Field Type: `text`
+   - The module will write **Yes** to this field if incomplete surveys exist in the queue for the record and **No** if there are no incomplete surveys for the record.
+- `[incomplete_surveys_number]`
+   - Field Type: `text`
+   - The module writes the number of incomplete surveys in the queue for the record.
+- `[total_surveys_number]`
+   - Field Type: `text`
+   - The module writes the number of total surveys in the queue for the record.
+- `[survey_queue_link]`
+   - Field Type: `text`
+   - The module writes the record's survey queue link encoded as HTML, in this format:
    - `<a href="https://redcap.myinstitution.org/surveys/?sq=Wvw4Hbf3MT">Survey Queue Link</a>`
+
+---
+
+#### Module Configuration
 
 After adding those fields to the project, you may enable and configure the Survey Queue Status external module.  
 
@@ -37,10 +66,18 @@ After adding those fields to the project, you may enable and configure the Surve
 
    ![settings_survey_email_enabled](documentation/images/settings_survey_email_enabled.png)
    
-1. If you enable the **Survey Email** function, you must also enter an **Email body**; i.e., the text of the reminder email message you wish to send to survey respondents. You may use the rich text editor features as desired.  Also, piping is allowed in the **Email body** field; for example:
-   - `[participant_firstname]`, below is your survey queue, which lists the `[incomplete_surveys_number]` surveys that you have not yet completed. Please click on the link below to open your survey queue; select a survey and click the **Begin Survey** button.
-   - `[survey_queue_link]`
-      - If the link above does not work, copy and paste this URL into your browser: `[survey-queue-url]`
+1. If you enable the **Survey Email** function, the following configurations are required:
+   - **Email From**
+      - Defaults to the REDCap Administrator email
+   - **Email Subject**
+      - Defaults to "You have surveys to complete"
+   - **Email Body**
+      - The text of the reminder email message you wish to send to survey respondents. You may use the rich text editor features as desired.  
+      - Supports standard piping and smart variables. Example:
+         - `[participant_firstname]`, below is your survey queue, which lists the `[incomplete_surveys_number]` surveys that you have not yet completed. Please click on the link below to open your survey queue; select a survey and click the **Begin Survey** button.  
+         `[survey_queue_link]`  
+         If the link above does not work, copy and paste this URL into your browser: `[survey-queue-url]`
+
 1. In the **Reminder Emails Frequency (Days)** field, specify a number which represents the frequency (in days) at which you wish to send the reminder emails to survey respondents.  This value is required.
 1. The **Email Initialization Date** works in conjunction with the **Reminder Emails Frequency (Days)** value to set the date on which the first reminder email messages will go out to survey respondents.  This is a required value.  Here are several examples that illustrate the **Email Initialization Date.**
    - Reminder emails will be sent weekly (every seven days), starting on April 30, 2022:
