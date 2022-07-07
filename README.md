@@ -18,7 +18,9 @@ Additional info/features:
    - This can be overridden when run on-demand.
 - Records are processed in batches of 100, so in the event of a module crash, it will pick up where it left off during the next run. 
 - An optional component allows admins to configure the sending of automatic reminder email messages.
-   - Supports rich text and piping.  
+   - Supports rich text and piping.
+- A project link, "Survey Queue Status", is included to allow for on-demand runs of the job.
+   - Contains the option to ignore the 24 hour cutoff, to force all records to be checked and processed. 
 
 ---
 
