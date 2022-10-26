@@ -156,7 +156,11 @@ trait ModuleUtils {
                 );
                 // add any errors to result
                 if (!empty($save_result["errors"])) {
-                    array_push($results["errors"], ...$save_result["errors"]);
+                    if (is_array($save_result["errors"])) {
+                        array_push($results["errors"], ...$save_result["errors"]);
+                    } else {
+                        $results["errors"][] = $save_result["errors"];
+                    }
                     $err = print_r($save_result["errors"], true);
                     $log_msg = ($debugging ? "[DEBUG]" : "") . $err;
                     $this->log($log_msg, [ "project_id" => $project_id ]);
@@ -168,7 +172,7 @@ trait ModuleUtils {
                 $this->log($log_msg, [ "project_id" => $project_id ]);
             }
             // handle emailing if enabled
-            if($config["survey_email_enabled"] === true) {
+            if(empty($results["errors"]) && $config["survey_email_enabled"] === true) {
                 $email_sent_count = 0;
                 $email_fail_count = 0;
                 foreach ($survey_dataset as $recId => $rec) {

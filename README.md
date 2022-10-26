@@ -32,7 +32,7 @@ A quick note about debugging before you get started.  The `Debug Mode` option in
 
 #### Required Fields
 
-The module requires admins to create the following five (5) fields in an appropriate project instrument:
+The module requires admins to create the following fields in an appropriate project instrument:
 
 > **IMPORTANT:** If the module is longitudinal, these fields **must** exist on the first event! 
 
@@ -53,6 +53,11 @@ The module requires admins to create the following five (5) fields in an appropr
    - Field Type: `text`
    - The module writes the record's survey queue link encoded as HTML, in this format:
    - `<a href="https://redcap.myinstitution.org/surveys/?sq=Wvw4Hbf3MT">Survey Queue Link</a>`
+- `[email]`
+    - Field Type: `text`
+    - Validation: `Email`
+    - The designated field for emailing participants. 
+      - Required if you intend to use the module's built-in emailing feature.
 
 ---
 
